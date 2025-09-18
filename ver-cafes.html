@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Ver Cafés - Cafe pendiente</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <main class="page-container">
+    <div class="page-card">
+      <div class="logo">☕</div>
+      <h1>Cafe pendiente</h1>
+      <div class="cafe-list" id="cafeList">
+        <!-- Cafes will be loaded dynamically -->
+      </div>
+    </div>
+  </main>
+<script>
+    async function loadCafes() {
+      try {
+        const response = await fetch('/api/cafes');
+        const cafes = await response.json();
+        
+        const cafeList = document.getElementById('cafeList');
+        cafeList.innerHTML = '';
+        
+        cafes.forEach(cafe => {
+          const cafeItem = document.createElement('div');
+          cafeItem.className = 'cafe-item';
+          cafeItem.onclick = () => {
+            localStorage.setItem('selectedCafeId', cafe.id);
+            location.href = 'actualizar-cafes.html';
+          };
+          
+          cafeItem.innerHTML = `
+            <span>${cafe.nombre}</span>
+            <span class="counter">${cafe.cafes_pendientes}</span>
+          `;
+          
+          cafeList.appendChild(cafeItem);
+        });
+      } catch (error) {
+        console.error('Error loading cafes:', error);
+        alert('Error cargando los cafés');
+      }
+    }
+    
+    // Load cafes when page loads
+    window.addEventListener('load', loadCafes);
+  </script>
+</body>
+</html>ml>

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Registro - Cafe pendiente</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <main class="page-container">
+    <div class="page-card">
+      <div class="logo">☕</div>
+      <h1>Cafe pendiente</h1>
+      <form class="form-container" onsubmit="handleRegistro(event)">
+        <div class="input-group">
+          <input type="text" placeholder="Usuario" id="usuario" required>
+        </div>
+        <div class="input-group">
+          <input type="password" placeholder="contraseña" id="contrasena" required>
+        </div>
+        <div class="input-group">
+          <input type="text" placeholder="nombre del cafe" id="nombreCafe" required>
+        </div>
+        <div class="input-group">
+          <input type="text" placeholder="direccion" id="direccion" required>
+        </div>
+        <button type="submit" class="primary-button">Crear</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    async function handleRegistro(event) {
+      event.preventDefault();
+      const usuario = document.getElementById('usuario').value;
+      const contrasena = document.getElementById('contrasena').value;
+      const nombreCafe = document.getElementById('nombreCafe').value;
+      const direccion = document.getElementById('direccion').value;
+      
+      if (usuario && contrasena && nombreCafe && direccion) {
+        try {
+          const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario,
+              password: contrasena,
+              nombreCafe,
+              direccion
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            alert('Registro exitoso');
+            window.location.href = 'ver-cafes.html';
+          } else {
+            alert(data.message || 'Error en el registro');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error de conexión');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

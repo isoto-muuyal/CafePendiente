@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Welcome - Replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <main class="welcome-container">
+    <div class="welcome-card">
+      <h1 class="welcome-title">Welcome!</h1>
+      <p class="welcome-message">You have successfully logged in.</p>
+      <p class="user-info">Hello, <span id="userEmail"></span>!</p>
+      
+      <div class="welcome-actions">
+        <button onclick="logout()" class="logout-button">Logout</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Get user email from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const userEmail = urlParams.get('email') || 'User';
+    document.getElementById('userEmail').textContent = userEmail;
+    
+    function logout() {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+
+</html>

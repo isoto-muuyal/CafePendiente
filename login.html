@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Login - Cafe pendiente</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <main class="page-container">
+    <div class="page-card">
+      <div class="logo">☕</div>
+      <h1>Cafe pendiente</h1>
+      <form class="form-container" onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <input type="text" placeholder="Usuario" id="usuario" required>
+        </div>
+        <div class="input-group">
+          <input type="password" placeholder="Contraseña" id="contrasena" required>
+        </div>
+        <button type="submit" class="primary-button">Login</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    async function handleLogin(event) {
+      event.preventDefault();
+      const usuario = document.getElementById('usuario').value;
+      const contrasena = document.getElementById('contrasena').value;
+      
+      if (usuario && contrasena) {
+        try {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              usuario,
+              password: contrasena
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            localStorage.setItem('userId', data.userId);
+            window.location.href = 'actualizar-cafes.html';
+          } else {
+            alert(data.message || 'Credenciales inválidas');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error de conexión');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

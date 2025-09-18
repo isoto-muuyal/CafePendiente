@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Actualizar Cafés - Cafe pendiente</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <main class="page-container">
+    <div class="page-card">
+      <div class="logo">☕</div>
+      <h1>Cafe pendiente</h1>
+      <div class="counter-section">
+        <div class="counter-display">
+          <span>Cafés pendientes</span>
+          <input type="number" class="large-counter-input" id="contador" value="3" min="0">
+        </div>
+        <button onclick="actualizarContador()" class="primary-button">Actualizar</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    let currentCafeId = null;
+    
+    async function loadCafeData() {
+      try {
+        currentCafeId = localStorage.getItem('selectedCafeId');
+        if (!currentCafeId) {
+          // If no specific cafe selected, default to first cafe or create a default one
+          currentCafeId = 1;
+        }
+        
+        const response = await fetch(`/api/cafes/${currentCafeId}`);
+        if (response.ok) {
+          const cafe = await response.json();
+          document.getElementById('contador').value = cafe.cafes_pendientes;
+        }
+      } catch (error) {
+        console.error('Error loading cafe data:', error);
+      }
+    }
+    
+    async function actualizarContador() {
+      try {
+        const newCount = document.getElementById('contador').value;
+        
+        const response = await fetch(`/api/cafes/${currentCafeId}/count`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cafes_pendientes: parseInt(newCount)
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          window.location.href = 'exito.html';
+        } else {
+          alert(data.message || 'Error actualizando el contador');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión');
+      }
+    }
+    
+    // Load cafe data when page loads
+    window.addEventListener('load', loadCafeData);
+  </script>
+</body>
+</html>
